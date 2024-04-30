@@ -11,17 +11,29 @@ const PORT = process.env.PORT || 4000;
 
 // midleware
 app.use(express.json());
-app.use(cors());
+app.use(express.urlencoded({ extended: true }))
+
+app.use(cors())
 
 //user routes
 app.use("/api", require("./routs/rout"));
 
-// error handleing
-app.get("*", function (req, res) {
+
+//api not found error
+app.use((req, res) => {
   res.send({
     status: false,
-    message: "Get product Something wents wrong",
+    message: "Api rout not found",
     error: "not found"
+  })
+});
+
+// error handleing
+app.use((err, req, res) => {
+  res.send({
+    status: false,
+    message: "Got server error",
+    error: err.message
   })
 });
 
